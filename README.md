@@ -1,44 +1,79 @@
-# Matrix Transformation Visualizer (2×2)
+# GEO Matrix Transformation Visualizer v1.3
 
-This Python project provides an intuitive GUI to input and multiply 2×2 matrices, and generates a geometric visualization using [Manim](https://www.manim.community/).
+A Python GUI application that demonstrates 2D linear transformations through Manim animations, showing how matrices transform vector spaces step-by-step.
 
-## 🔧 Features
-- Input two 2×2 matrices.
-- View the calculated result.
-- Watch an animated Manim scene showing:
-  - The original basis vectors.
-  - Step-by-step application of each matrix as a transformation.
-  - Final combined transformation (B × A).
+## Key Features
 
-## 🖥️ How to Run
+- 🖥️ Intuitive Tkinter interface for matrix input
+- 🧮 Supports 2x2 matrix multiplication visualization
+- 📊 Animated transformation of basis vectors (î and ĵ)
+- 🔄 Shows intermediate transformation steps
+- 🎥 Automatic video generation and playback
 
-1. **Install dependencies**  
-   Make sure you have [Manim](https://docs.manim.community/en/stable/installation.html) installed and working. You can also install other requirements:
-   ```bash
-   pip install numpy tk
-Run the app
+## Installation
 
-2. **Run the app**
-python main_gui.py
+### Prerequisites
+- Python 3.8+
+- Manim Community (v0.19.0 or later)
+- NumPy
+- Tkinter (usually included with Python)
 
-3. **Enter Matrices**
-Enter two 2×2 matrices (space-separated values, one row per line) and click Calculate.
+### Setup
+```bash
+git clone https://github.com/0xmennatullah/GEO-v1.3.git
+cd GEO-v1.3
+pip install manim numpy
+```
 
-4. **View Animation**
-Manim will render the transformation and open the video automatically.
+## Usage
 
-## 📂 Project Structure
+1. Run the application:
+```bash
+python matrix_visualizer.py
+```
 
-GEO V1.2/
-├── main_gui.py                 # Main GUI and logic
-├── manim/                      # (Optional) Any custom Manim assets
-├── media/                      # Auto-generated Manim video output
-├── matrix_visualization.py     # Auto-generated Manim script (ignored)
-├── .gitignore
-└── README.md                   # You're reading it now
+2. In the GUI:
+   - Enter your 2x2 matrices (default shows identity and scaling matrices)
+   - Click "Calculate & Visualize"
+   - The animation will automatically play after rendering
 
+## How It Works
 
-## ⚠️ Notes
-- Only 2×2 matrices are currently supported for geometric visualization.
+The application:
+1. Takes user-input matrices through a Tkinter interface
+2. Computes the matrix product B×A
+3. Generates a Manim script visualizing:
+   - Initial basis vectors
+   - Transformation by matrix A
+   - Subsequent transformation by matrix B
+   - Final combined transformation
+4. Renders and displays the animation
 
-- You can extend this to 3D or higher-order matrices with more Manim work.
+## Code Structure
+
+```
+GEO-v1.3/
+├── matrix_visualizer.py      # Main GUI application
+├── matrix_visualization.py   # Auto-generated Manim script
+├── media/                    # Output videos directory
+└── README.md
+```
+
+## Customization Options
+
+Modify these in `matrix_visualizer.py`:
+- `x_range`/`y_range` in `create_manim_file()` - Change coordinate system bounds
+- `.scale()` values - Adjust text/object sizes
+- Color codes - Change vector colors (RED/GREEN)
+
+## Troubleshooting
+
+If you encounter:
+- **Encoding errors**: Ensure your system uses UTF-8 encoding
+- **Manim not found**: Verify with `manim --version`
+- **Blank videos**: Try `manim render --clean` first
+
+## License
+
+MIT License - See [LICENSE](LICENSE) for details.
+
