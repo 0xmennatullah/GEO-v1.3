@@ -61,14 +61,10 @@ python main_gui.py
 
 
 ## 🔧 Troubleshooting
-
-
-FFmpeg not found => Run the installation command for your OS
-
-Invalid LaTeX matrix => Use proper syntax: \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}
-
-Blank videos => Run manim render --clean first
-Encoding errors => Ensure files are saved as UTF-8
+If you encounter:
+- **Encoding errors**: Ensure your system uses UTF-8 encoding
+- **Manim not found**: Verify with `manim --version`
+- **Blank videos**: Try `manim render --clean` first
 
 ## How It Works
 
@@ -86,25 +82,13 @@ The application:
 
 ```
 GEO-v1.3/
-├── main_gui.py # Main application entry point
-├── README.md # This documentation
-├── .gitignore # Git exclusion rules
-└── manim/ # Manim-related files
+├── main_gui.py              # Main application
+├── check_environment.py     # Dependency verifier
+├── setup_environment.bat    # Windows setup
+├── manim.cfg                # Render configuration
+├── .gitignore               # Ignore media/ and caches
+└── README.md                # This file
 ```
-
-## Customization Options
-
-Modify these in `matrix_visualizer.py`:
-- `x_range`/`y_range` in `create_manim_file()` - Change coordinate system bounds
-- `.scale()` values - Adjust text/object sizes
-- Color codes - Change vector colors (RED/GREEN)
-
-## Troubleshooting
-
-If you encounter:
-- **Encoding errors**: Ensure your system uses UTF-8 encoding
-- **Manim not found**: Verify with `manim --version`
-- **Blank videos**: Try `manim render --clean` first
 
 ## License
 
