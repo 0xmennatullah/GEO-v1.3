@@ -23,8 +23,7 @@ A Python GUI application that demonstrates 2D linear transformations through Man
    - Select "Install missing packages on-the-fly" (IMPORTANT for Manim)
    - Check "Run MiKTeX Console after exiting"
    - Click "Finish"
-   - First-Time Setup:
-   -    When MiKTeX Console opens, go to "Updates" tab, Click "Check for updates" and install any available updates.
+   - First-Time Setup: When MiKTeX Console opens, go to "Updates" tab, Click "Check for updates" and install any available updates.
 
 3. **Then launch the GUI**:
    ```bash
