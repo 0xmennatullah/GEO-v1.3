@@ -39,6 +39,17 @@ Before running, ensure you have:
    ```bash
    pip install manim numpy
    ```
+## Full Dependencies
+
+For complete mathematical rendering:
+- **Windows**: MiKTeX (auto-installed by setup script)
+- **Mac/Linux**: 
+  ```bash
+  # Mac
+  brew install --cask mactex
+  
+  # Linux (Debian/Ubuntu)
+  sudo apt install texlive-full
 
 ### Setup
    ```bash
