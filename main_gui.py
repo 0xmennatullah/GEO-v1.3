@@ -54,42 +54,86 @@ def open_video_file(filepath):
         messagebox.showerror("Playback Error", 
             f"Could not open video:\n{str(e)}\n"
             f"Try manually opening:\n{filepath}")
-
 def run_manim_visualization():
-    """Run the Manim visualization and show the output"""
+    """Run the Manim visualization with comprehensive error handling"""
     try:
-        # Clean previous renders
+        # 1. Clean previous renders
         media_dir = os.path.join(os.getcwd(), "media")
         if os.path.exists(media_dir):
-            for root, _, files in os.walk(media_dir):
-                for file in files:
-                    if file.endswith(".mp4"):
-                        os.remove(os.path.join(root, file))
+            shutil.rmtree(media_dir)
+        
+        # 2. Verify LaTeX is available
+        try:
+            subprocess.run(["pdflatex", "--version"], 
+                         stdout=subprocess.PIPE, 
+                         stderr=subprocess.PIPE, 
+                         check=True)
+        except:
+            messagebox.showwarning(
+                "LaTeX Not Found",
+                "For best results, install LaTeX:\n"
+                "Windows: https://miktex.org/download\n"
+                "Mac: brew install --cask mactex\n"
+                "Linux: sudo apt install texlive-latex-extra"
+            )
 
-        # Run Manim with modern syntax
+        # 3. Run Manim with detailed error capture
         command = [
             sys.executable,
             "-m", "manim",
             "-ql",  # Medium quality
+            "--progress_bar=none",
             "--disable_caching",
             "matrix_visualization.py",
             "MatrixMultiplicationScene"
         ]
         
-        process = subprocess.run(command, capture_output=True, text=True)
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=60  # 1 minute timeout
+        )
 
-        if process.returncode != 0:
-            raise Exception(f"Manim error: {process.stderr}")
+        # 4. Handle specific error cases
+        if result.returncode != 0:
+            error_msg = result.stderr.strip()
+            
+            # LaTeX-specific errors
+            if "LaTeX Error" in error_msg:
+                latex_error = error_msg.split("! LaTeX Error")[-1].split("\n")[0]
+                raise RuntimeError(
+                    f"LaTeX rendering failed:\n{latex_error}\n\n"
+                    "Install MiKTeX (Windows) or TeX Live (Linux/Mac)"
+                )
+            
+            # General Manim errors
+            elif "Error" in error_msg:
+                raise RuntimeError(error_msg.split("Error")[-1].strip())
+            
+            else:
+                raise RuntimeError(f"Manim failed: {error_msg}")
 
-        # Find and open the video file
+        # 5. Find and open the generated video
         video_file = None
         for root, _, files in os.walk(media_dir):
             for file in files:
-                if file.startswith("MatrixMultiplicationScene") and file.endswith(".mp4"):
+                if (file.startswith("MatrixMultiplicationScene") and 
+                    file.endswith(".mp4")):
                     video_file = os.path.join(root, file)
                     break
-        
-        if video_file:
+
+        if not video_file:
+            raise FileNotFoundError(
+                "Video file not found in:\n" 
+                f"{media_dir}\n\n"
+                "Possible causes:\n"
+                "1. Rendering failed silently\n"
+                "2. Incorrect output directory"
+            )
+
+        # 6. Platform-specific video opening
+        try:
             if platform.system() == 'Windows':
                 os.startfile(video_file)
             elif platform.system() == 'Darwin':
@@ -97,13 +141,41 @@ def run_manim_visualization():
             else:
                 subprocess.run(['xdg-open', video_file])
             return True
-        
-        raise Exception("Could not find generated video file")
+            
+        except Exception as e:
+            messagebox.showinfo(
+                "Visualization Ready",
+                f"Video rendered but couldn't auto-play:\n{video_file}"
+            )
+            return True
 
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to generate visualization: {str(e)}")
+    except subprocess.TimeoutExpired:
+        messagebox.showerror(
+            "Timeout Error",
+            "Rendering took too long (over 1 minute)\n"
+            "Try simpler matrices or lower quality (-ql)"
+        )
         return False
 
+    except Exception as e:
+        error_msg = str(e)
+        
+        # Special handling for common errors
+        if "No such file or directory" in error_msg:
+            error_msg += "\n\nTry: pip install --upgrade manim"
+        elif "Unknown projection" in error_msg:
+            error_msg += "\n\nUpdate Manim: pip install manim --upgrade"
+            
+        messagebox.showerror(
+            "Rendering Failed",
+            f"{error_msg}\n\n"
+            "Troubleshooting:\n"
+            "1. Delete 'media' folder and retry\n"
+            "2. Check matrices for invalid values\n"
+            "3. Update Manim: pip install --upgrade manim"
+        )
+        return False
+    
 def parse_matrix(matrix_str, rows, cols):
     """Parse input text to create a numpy matrix"""
     try:
@@ -126,7 +198,10 @@ def parse_matrix(matrix_str, rows, cols):
 def matrix_to_latex_str(matrix):
     """Convert numpy matrix to valid LaTeX"""
     rows, cols = matrix.shape
-    elements = [" & ".join([f"{x:.2f}" for x in row]) for row in matrix]
+    elements = []
+    for row in matrix:
+        # Format numbers and handle potential rounding errors
+        elements.append(" & ".join([f"{x:.2f}".rstrip('0').rstrip('.') if '.' in f"{x:.2f}" else f"{x}" for x in row]))
     return r"\begin{bmatrix} " + r" \\ ".join(elements) + r" \end{bmatrix}"
 
 def create_manim_file(matrix1, matrix2):

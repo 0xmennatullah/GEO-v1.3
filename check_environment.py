@@ -3,14 +3,18 @@ import sys
 from tkinter import messagebox
 
 def check_latex():
-    """Check if LaTeX is installed"""
+    """Verify LaTeX is installed and working"""
     try:
-        # Check for either MiKTeX or TeX Live
-        result = subprocess.run(["latex", "--version"], 
-                              capture_output=True, 
-                              text=True)
-        return "MiKTeX" in result.stdout or "TeX Live" in result.stdout
-    except FileNotFoundError:
+        test_tex = r"\documentclass{article}\begin{document}Test\end{document}"
+        result = subprocess.run(
+            ["pdflatex", "--version"],
+            input=test_tex,
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        return "pdfTeX" in result.stdout
+    except:
         return False
 
 def verify_environment():
