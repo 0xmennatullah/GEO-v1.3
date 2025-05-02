@@ -29,7 +29,7 @@ pip install manim numpy
 
 1. Run the application:
 ```bash
-python matrix_visualizer.py
+python main_gui.py
 ```
 
 2. In the GUI:
