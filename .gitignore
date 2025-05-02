@@ -1,4 +1,5 @@
-__pycache__/
+# .gitignore additions
 media/
-matrix_visualization.py
+__pycache__/
 *.mp4
+*.log
