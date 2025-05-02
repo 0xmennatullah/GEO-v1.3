@@ -17,7 +17,16 @@ A Python GUI application that demonstrates 2D linear transformations through Man
    ./setup_environment.bat  # Windows
    ./setup_environment.sh  # Mac/Linux
 
-2. **Then launch the GUI**:
+2. **Install LaTex**:
+   - https://miktex.org/download
+   - Click "Download" under the "Basic MiKTeX" section
+   - Select "Install missing packages on-the-fly" (IMPORTANT for Manim)
+   - Check "Run MiKTeX Console after exiting"
+   - Click "Finish"
+   - First-Time Setup:
+   -    When MiKTeX Console opens, go to "Updates" tab, Click "Check for updates" and install any available updates.
+
+3. **Then launch the GUI**:
    ```bash
    python main_gui.py
 
