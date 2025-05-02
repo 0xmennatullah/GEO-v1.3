@@ -12,6 +12,15 @@ A Python GUI application that demonstrates 2D linear transformations through Man
 
 ## Installation
 
+1. **First, run setup**:
+   ```bash
+   ./setup_environment.bat  # Windows
+   ./setup_environment.sh  # Mac/Linux
+
+2. **Then launch the GUI**:
+   ```bash
+   python main_gui.py
+
 ## 🛠 Prerequisites
 
 Before running, ensure you have:

@@ -6,6 +6,31 @@ import os
 import platform
 import sys
 
+def verify_setup():
+    """Check if setup was completed"""
+    required = {
+        "FFmpeg": ["ffmpeg", "-version"],
+        "LaTeX": ["latex", "--version"],
+        "Manim": ["manim", "--version"]
+    }
+    
+    missing = []
+    for name, cmd in required.items():
+        try:
+            subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        except:
+            missing.append(name)
+    
+    if missing:
+        messagebox.showerror(
+            "Setup Required",
+            f"Run setup_environment.bat first!\nMissing: {', '.join(missing)}"
+        )
+        sys.exit(1)
+
+if __name__ == "__main__":
+    verify_setup() 
+
 def check_ffmpeg():
     """Check if FFmpeg is installed"""
     try:
