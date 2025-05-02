@@ -1,5 +1,17 @@
-# .gitignore additions
+# Manim outputs
 media/
 __pycache__/
 *.mp4
 *.log
+*.aux
+*.png
+
+# Python
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
