@@ -53,10 +53,10 @@ The application:
 
 ```
 GEO-v1.3/
-├── matrix_visualizer.py      # Main GUI application
-├── matrix_visualization.py   # Auto-generated Manim script
-├── media/                    # Output videos directory
-└── README.md
+├── main_gui.py # Main application entry point
+├── README.md # This documentation
+├── .gitignore # Git exclusion rules
+└── manim/ # Manim-related files
 ```
 
 ## Customization Options
