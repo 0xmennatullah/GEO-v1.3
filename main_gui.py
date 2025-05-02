@@ -4,12 +4,65 @@ import numpy as np
 import subprocess
 import os
 import platform
+import sys
 
-# Environment check
-from check_environment import verify_environment
-if not verify_environment():
-    sys.exit(1)
-    
+def check_ffmpeg():
+    """Check if FFmpeg is installed"""
+    try:
+        subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        return True
+    except:
+        return False
+
+def run_manim_visualization():
+    """Run the Manim visualization and show the output"""
+    try:
+        # Clean previous renders
+        media_dir = os.path.join(os.getcwd(), "media")
+        if os.path.exists(media_dir):
+            for root, _, files in os.walk(media_dir):
+                for file in files:
+                    if file.endswith(".mp4"):
+                        os.remove(os.path.join(root, file))
+
+        # Run Manim with modern syntax
+        command = [
+            sys.executable,
+            "-m", "manim",
+            "-ql",  # Medium quality
+            "--disable_caching",
+            "matrix_visualization.py",
+            "MatrixMultiplicationScene"
+        ]
+        
+        process = subprocess.run(command, capture_output=True, text=True)
+
+        if process.returncode != 0:
+            raise Exception(f"Manim error: {process.stderr}")
+
+        # Find and open the video file
+        video_file = None
+        for root, _, files in os.walk(media_dir):
+            for file in files:
+                if file.startswith("MatrixMultiplicationScene") and file.endswith(".mp4"):
+                    video_file = os.path.join(root, file)
+                    break
+        
+        if video_file:
+            if platform.system() == 'Windows':
+                os.startfile(video_file)
+            elif platform.system() == 'Darwin':
+                subprocess.run(['open', video_file])
+            else:
+                subprocess.run(['xdg-open', video_file])
+            return True
+        
+        raise Exception("Could not find generated video file")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to generate visualization: {str(e)}")
+        return False
+
 def parse_matrix(matrix_str, rows, cols):
     """Parse input text to create a numpy matrix"""
     try:
@@ -42,25 +95,30 @@ def create_manim_file(matrix1, matrix2):
     result_matrix = np.dot(matrix2, matrix1)
     result_latex = matrix_to_latex_str(result_matrix)
 
-    script_content = f"""from manim import *
+    script_content = f"""# -*- coding: utf-8 -*-
+from manim import *
 import numpy as np
 
 class MatrixMultiplicationScene(Scene):
     def construct(self):
+        # Define matrices
         matrix1 = np.array({matrix1.tolist()})
         matrix2 = np.array({matrix2.tolist()})
         result = np.dot(matrix2, matrix1)
 
+        # Display matrices
         matrix1_tex = MathTex(r"A = {matrix1_latex}").scale(0.8).to_corner(UL)
         matrix2_tex = MathTex(r"B = {matrix2_latex}").scale(0.8).next_to(matrix1_tex, DOWN, buff=1)
         equals_tex = MathTex(r"A \\times B =").scale(0.8).next_to(matrix2_tex, DOWN, buff=1)
         result_tex = MathTex(r"{result_latex}").scale(0.8).next_to(equals_tex, RIGHT)
 
+        # Show matrices
         self.play(Write(matrix1_tex), Write(matrix2_tex))
         self.wait(1)
         self.play(Write(equals_tex), Write(result_tex))
         self.wait(1)
 
+        # Coordinate system
         axes = Axes(
             x_range=[-5, 5, 1],
             y_range=[-5, 5, 1],
@@ -69,12 +127,14 @@ class MatrixMultiplicationScene(Scene):
 
         self.play(Create(axes))
 
+        # Unit vectors
         i_hat = Arrow(axes.c2p(0, 0), axes.c2p(1, 0), buff=0, color=RED)
         j_hat = Arrow(axes.c2p(0, 0), axes.c2p(0, 1), buff=0, color=GREEN)
 
         self.play(GrowArrow(i_hat), GrowArrow(j_hat))
         self.wait(1)
 
+        # First transformation
         title1 = Tex("Transformation by Matrix $A$").scale(0.5).to_edge(UP)
         self.play(Write(title1))
 
@@ -84,6 +144,7 @@ class MatrixMultiplicationScene(Scene):
         self.play(Transform(i_hat, new_i), Transform(j_hat, new_j))
         self.wait(1)
 
+        # Second transformation
         title2 = Tex("Transformation by Matrix $B$").scale(0.5).to_edge(UP)
         self.play(FadeOut(title1), Write(title2))
 
@@ -96,6 +157,7 @@ class MatrixMultiplicationScene(Scene):
         self.play(Transform(i_hat, final_i), Transform(j_hat, final_j))
         self.wait(1)
 
+        # Combined transformation
         title3 = Tex("Combined Transformation ($B \\times A$)").scale(0.5).to_edge(UP)
         self.play(FadeOut(title2), Write(title3))
 
@@ -106,55 +168,19 @@ class MatrixMultiplicationScene(Scene):
     with open("matrix_visualization.py", "w", encoding="utf-8") as f:
         f.write(script_content)
 
-def open_video_file(filepath):
-    """Open the video file using the default viewer"""
-    try:
-        if platform.system() == 'Windows':
-            os.startfile(filepath)
-        elif platform.system() == 'Darwin':
-            subprocess.run(['open', filepath])
-        else:
-            subprocess.run(['xdg-open', filepath])
-    except Exception as e:
-        messagebox.showerror("Error", f"Could not open video file: {str(e)}")
-
-def run_manim_visualization():
-    """Run the Manim visualization and show the output"""
-    try:
-        media_dir = os.path.join(os.getcwd(), "media")
-        if os.path.exists(media_dir):
-            for root, dirs, files in os.walk(media_dir):
-                for file in files:
-                    if file.endswith(".mp4"):
-                        os.remove(os.path.join(root, file))
-
-        command = ["manim", "-ql", "matrix_visualization.py", "MatrixMultiplicationScene"]
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        stdout, stderr = process.communicate()
-
-        if process.returncode != 0:
-            raise Exception(f"Manim error: {stderr}")
-
-        for root, dirs, files in os.walk(media_dir):
-            for file in files:
-                if file.startswith("MatrixMultiplicationScene") and file.endswith(".mp4"):
-                    open_video_file(os.path.join(root, file))
-                    return True
-
-        raise Exception("Could not find generated video file")
-
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to generate visualization: {str(e)}")
-        return False
-
 def calculate_matrices():
     """Calculate matrix product and show visualization"""
     try:
+        # Check FFmpeg first
+        if not check_ffmpeg():
+            messagebox.showerror("Error", "FFmpeg not found. Please install FFmpeg first.")
+            return
+
         rows = int(rows_var.get())
         cols = int(cols_var.get())
 
         if rows != 2 or cols != 2:
-            messagebox.showwarning("Only 2x2 matrices supported", "For visualization, please use 2x2 matrices.")
+            messagebox.showwarning("Warning", "For visualization, please use 2x2 matrices.")
             return
 
         matrix1_str = matrix1_text.get("1.0", "end-1c")
@@ -169,46 +195,72 @@ def calculate_matrices():
 
         create_manim_file(matrix1, matrix2)
 
-        status_label.config(text="Running Manim...")
+        status_label.config(text="Generating visualization...")
         root.update()
 
         if run_manim_visualization():
-            status_label.config(text="Visualization completed.")
+            status_label.config(text="Visualization complete!")
         else:
-            status_label.config(text="Failed to create visualization.")
+            status_label.config(text="Visualization failed")
 
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
-# GUI SETUP
+# GUI Setup
 root = tk.Tk()
-root.title("Matrix Multiplication Visualizer")
+root.title("Matrix Transformation Visualizer")
 
-frame = ttk.Frame(root, padding=10)
-frame.grid(row=0, column=0)
+style = ttk.Style()
+style.configure("TFrame", padding=10)
+style.configure("TButton", padding=6)
 
-ttk.Label(frame, text="Matrix Dimensions (rows x cols):").grid(row=0, column=0, sticky="w")
+main_frame = ttk.Frame(root)
+main_frame.pack(padx=10, pady=10)
+
+# Matrix Dimensions
+dim_frame = ttk.Frame(main_frame)
+dim_frame.pack(fill=tk.X, pady=5)
+
+ttk.Label(dim_frame, text="Matrix Dimensions:").pack(side=tk.LEFT)
 rows_var = tk.StringVar(value="2")
+ttk.Entry(dim_frame, width=3, textvariable=rows_var).pack(side=tk.LEFT, padx=5)
+ttk.Label(dim_frame, text="x").pack(side=tk.LEFT)
 cols_var = tk.StringVar(value="2")
-ttk.Entry(frame, width=5, textvariable=rows_var).grid(row=0, column=1)
-ttk.Label(frame, text="x").grid(row=0, column=2)
-ttk.Entry(frame, width=5, textvariable=cols_var).grid(row=0, column=3)
+ttk.Entry(dim_frame, width=3, textvariable=cols_var).pack(side=tk.LEFT)
 
-ttk.Label(frame, text="Matrix A (row by row):").grid(row=1, column=0, columnspan=4, sticky="w")
-matrix1_text = tk.Text(frame, width=30, height=4)
-matrix1_text.grid(row=2, column=0, columnspan=4, pady=5)
+# Matrix Inputs
+matrix_frame = ttk.Frame(main_frame)
+matrix_frame.pack(fill=tk.BOTH, expand=True, pady=10)
 
-ttk.Label(frame, text="Matrix B (row by row):").grid(row=3, column=0, columnspan=4, sticky="w")
-matrix2_text = tk.Text(frame, width=30, height=4)
-matrix2_text.grid(row=4, column=0, columnspan=4, pady=5)
+ttk.Label(matrix_frame, text="Matrix A:").grid(row=0, column=0, sticky="w")
+matrix1_text = tk.Text(matrix_frame, width=20, height=4)
+matrix1_text.grid(row=1, column=0, padx=5, pady=5)
+matrix1_text.insert("1.0", "1 0\n0 1")  # Default identity matrix
 
-ttk.Label(frame, text="Result (B × A):").grid(row=5, column=0, columnspan=4, sticky="w")
-result_text = tk.Text(frame, width=30, height=4)
-result_text.grid(row=6, column=0, columnspan=4, pady=5)
+ttk.Label(matrix_frame, text="Matrix B:").grid(row=0, column=1, sticky="w")
+matrix2_text = tk.Text(matrix_frame, width=20, height=4)
+matrix2_text.grid(row=1, column=1, padx=5, pady=5)
+matrix2_text.insert("1.0", "2 0\n0 2")  # Default scaling matrix
 
-ttk.Button(frame, text="Calculate and Visualize", command=calculate_matrices).grid(row=7, column=0, columnspan=4, pady=10)
+# Result
+result_frame = ttk.Frame(main_frame)
+result_frame.pack(fill=tk.X, pady=10)
 
-status_label = ttk.Label(frame, text="")
-status_label.grid(row=8, column=0, columnspan=4)
+ttk.Label(result_frame, text="Result (B × A):").pack(anchor="w")
+result_text = tk.Text(result_frame, width=40, height=4)
+result_text.pack(fill=tk.X)
+
+# Buttons
+button_frame = ttk.Frame(main_frame)
+button_frame.pack(fill=tk.X, pady=10)
+
+ttk.Button(
+    button_frame, 
+    text="Calculate & Visualize", 
+    command=calculate_matrices
+).pack(side=tk.LEFT)
+
+status_label = ttk.Label(main_frame, text="Ready")
+status_label.pack(fill=tk.X)
 
 root.mainloop()

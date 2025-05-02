@@ -1,17 +1,17 @@
-# Manim outputs
-media/
-__pycache__/
-*.mp4
-*.log
-*.aux
-*.png
+# Manim generated files
+matrix_visualization.py
+/media/
 
 # Python
+__pycache__/
 *.pyc
-*.egg-info/
-dist/
-build/
+*.pyo
+*.pyd
 
-# OS
+# IDE
+.vscode/
+.idea/
+
+# System
 .DS_Store
 Thumbs.db
