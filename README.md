@@ -85,6 +85,7 @@ For complete mathematical rendering:
 
 1. Run the application:
 ```bash
+setup.bat
 python main_gui.py
 ```
 
