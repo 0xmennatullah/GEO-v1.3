@@ -51,11 +51,17 @@ Before running, ensure you have:
    ```bash
    python --version
    ```
-
+3. **MiKTeX**
+   ```powershell
+   # Run PowerShell as Administr
+   winget install ChristianSchenk.MiKTeX
+   ```
+   
 4. **Manim Dependencies**
    ```bash
    pip install manim numpy
    ```
+   
 ## Full Dependencies
 
 For complete mathematical rendering:
