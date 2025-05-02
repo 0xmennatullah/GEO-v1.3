@@ -62,12 +62,13 @@ python main_gui.py
 
 ## 🔧 Troubleshooting
 
-Troubleshooting
-Error	                  Solution
-FFmpeg not found	      Run the installation command for your OS
-Invalid LaTeX matrix	   Use proper syntax: \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}
-Blank videos	         Run manim render --clean first
-Encoding errors	      Ensure files are saved as UTF-8
+
+FFmpeg not found => Run the installation command for your OS
+
+Invalid LaTeX matrix => Use proper syntax: \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}
+
+Blank videos => Run manim render --clean first
+Encoding errors => Ensure files are saved as UTF-8
 
 ## How It Works
 
