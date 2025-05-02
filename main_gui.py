@@ -5,6 +5,11 @@ import subprocess
 import os
 import platform
 
+# Environment check
+from check_environment import verify_environment
+if not verify_environment():
+    sys.exit(1)
+    
 def parse_matrix(matrix_str, rows, cols):
     """Parse input text to create a numpy matrix"""
     try:
@@ -25,21 +30,10 @@ def parse_matrix(matrix_str, rows, cols):
         raise ValueError(f"Error parsing matrix: {e}")
 
 def matrix_to_latex_str(matrix):
-    """Convert a matrix to LaTeX bmatrix format"""
+    """Convert numpy matrix to valid LaTeX"""
     rows, cols = matrix.shape
-    latex = "\\begin{bmatrix} "
-    
-    for i in range(rows):
-        for j in range(cols):
-            if j > 0:
-                latex += " & "
-            val = matrix[i, j]
-            latex += f"{val:.2f}" if val != int(val) else str(int(val))
-        if i < rows - 1:
-            latex += " \\\\ "
-    
-    latex += " \\end{bmatrix}"
-    return latex
+    elements = [" & ".join([f"{x:.2f}" for x in row]) for row in matrix]
+    return r"\begin{bmatrix} " + r" \\ ".join(elements) + r" \end{bmatrix}"
 
 def create_manim_file(matrix1, matrix2):
     """Create a Manim script file for matrix visualization"""
