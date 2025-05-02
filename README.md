@@ -12,18 +12,54 @@ A Python GUI application that demonstrates 2D linear transformations through Man
 
 ## Installation
 
-### Prerequisites
-- Python 3.8+
-- Manim Community (v0.19.0 or later)
-- NumPy
-- Tkinter (usually included with Python)
+## 🛠 Prerequisites
+
+Before running, ensure you have:
+
+1. **FFmpeg** installed:
+   # Windows (PowerShell as Admin):
+   ```bash
+      winget install Gyan.FFmpeg
+   ```
+   # Mac/Linux:
+   ```bash
+   brew install ffmpeg  # or sudo apt install ffmpeg
+   ```
+   
+3. **Python 3.8+**
+   Verify with:
+
+   ```bash
+   python --version
+   ```
+
+4. **Manim Dependencies**
+   ```bash
+   pip install manim numpy
+   ```
+
+## 🔧 Troubleshooting
+
+### "Couldn't find ffmpeg" Error
+   Run the setup script first:
+   ```bash
+   ./setup_environment.sh  # or .\setup_environment.bat on Windows
+   ```
+
+### "Invalid LaTeX matrix" Error
+   Update your Python code to use:
+   ```python
+   MathTex(r"A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}") # correct
+#instead of
+   MatrixText("A = 'beginDimatrix() 5 & 2 \\times 2 & 3 \\times n'")  # Wrong
+   ```
 
 ### Setup
-```bash
-git clone https://github.com/0xmennatullah/GEO-v1.3.git
-cd GEO-v1.3
-pip install manim numpy
-```
+   ```bash
+   git clone https://github.com/0xmennatullah/GEO-v1.3.git
+   cd GEO-v1.3
+   pip install manim numpy
+   ```
 
 ## Usage
 
