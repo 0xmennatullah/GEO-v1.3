@@ -16,17 +16,19 @@ A Python GUI application that demonstrates 2D linear transformations through Man
 
 Before running, ensure you have:
 
-1. **FFmpeg** installed:
+1. **FFmpeg** (required for video rendering):
+   ```bash
    # Windows (PowerShell as Admin):
-   ```bash
-      winget install Gyan.FFmpeg
-   ```
-   # Mac/Linux:
-   ```bash
-   brew install ffmpeg  # or sudo apt install ffmpeg
+   winget install Gyan.FFmpeg
+   
+   # Mac:
+   brew install ffmpeg
+   
+   # Linux:
+   sudo apt install ffmpeg
    ```
    
-3. **Python 3.8+**
+2. **Python 3.8+**
    Verify with:
 
    ```bash
@@ -36,22 +38,6 @@ Before running, ensure you have:
 4. **Manim Dependencies**
    ```bash
    pip install manim numpy
-   ```
-
-## 🔧 Troubleshooting
-
-### "Couldn't find ffmpeg" Error
-   Run the setup script first:
-   ```bash
-   ./setup_environment.sh  # or .\setup_environment.bat on Windows
-   ```
-
-### "Invalid LaTeX matrix" Error
-   Update your Python code to use:
-   ```python
-   MathTex(r"A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}") # correct
-#instead of
-   MatrixText("A = 'beginDimatrix() 5 & 2 \\times 2 & 3 \\times n'")  # Wrong
    ```
 
 ### Setup
@@ -72,6 +58,16 @@ python main_gui.py
    - Enter your 2x2 matrices (default shows identity and scaling matrices)
    - Click "Calculate & Visualize"
    - The animation will automatically play after rendering
+
+
+## 🔧 Troubleshooting
+
+Troubleshooting
+Error	                  Solution
+FFmpeg not found	      Run the installation command for your OS
+Invalid LaTeX matrix	   Use proper syntax: \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}
+Blank videos	         Run manim render --clean first
+Encoding errors	      Ensure files are saved as UTF-8
 
 ## How It Works
 
