@@ -13,6 +13,22 @@ def check_ffmpeg():
         return True
     except:
         return False
+    
+def open_video_file(filepath):
+    """Open the video file using the default viewer"""
+    try:
+        # Convert path to raw string and handle spaces
+        raw_path = filepath.replace(' ', '%20') if platform.system() == 'Windows' else filepath
+        if platform.system() == 'Windows':
+            os.startfile(raw_path)
+        elif platform.system() == 'Darwin':
+            subprocess.run(['open', raw_path])
+        else:
+            subprocess.run(['xdg-open', raw_path])
+    except Exception as e:
+        messagebox.showerror("Playback Error", 
+            f"Could not open video:\n{str(e)}\n"
+            f"Try manually opening:\n{filepath}")
 
 def run_manim_visualization():
     """Run the Manim visualization and show the output"""
