@@ -55,11 +55,16 @@ Before running, ensure you have:
    ```powershell
    # Run PowerShell as Administr
    winget install ChristianSchenk.MiKTeX
+   # Update MiKTeX packages
+   mpm --update-db
+   mpm --update
    ```
    
 4. **Manim Dependencies**
    ```bash
    pip install manim numpy
+   # Verify Manim can find MiKTeX
+   manim --version
    ```
    
 ## Full Dependencies
