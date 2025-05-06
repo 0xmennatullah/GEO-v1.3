@@ -215,7 +215,7 @@ def create_manim_file(matrix1, matrix2):
 from manim import *
 import numpy as np
 
-class MatrixMultiplicationScene(Scene):
+class MatrixMultiplicationScene(ThreeDScene):
     def construct(self):
         # Define matrices
         matrix1 = np.array({matrix1.tolist()})
@@ -235,13 +235,21 @@ class MatrixMultiplicationScene(Scene):
         self.wait(1)
 
         # Coordinate system
-        axes = Axes(
+        axes = ThreeDAxes(
             x_range=[-5, 5, 1],
             y_range=[-5, 5, 1],
-            axis_config={{"color": BLUE}}
-        ).scale(0.6).to_edge(RIGHT)
+            z_range=[-5, 5, 1],
+            x_length=6,
+            y_length=6,
+            z_length=6
+        )
 
-        self.play(Create(axes))
+        # Animate creation of the axes
+        self.play(Create(axes), run_time=2)
+        self.wait(1)
+        
+        self.move_camera(phi=45 * DEGREES, theta=-125 * DEGREES, run_time=1.5)
+        self.wait(2)
 
         # Unit vectors
         i_hat = Arrow(axes.c2p(0, 0), axes.c2p(1, 0), buff=0, color=RED)

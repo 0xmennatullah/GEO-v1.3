@@ -62,7 +62,7 @@ Before running, ensure you have:
    
 4. **Manim Dependencies**
    ```bash
-   pip install manim numpy
+   pip install manim numpy tkinter
    # Verify Manim can find MiKTeX
    manim --version
    ```
