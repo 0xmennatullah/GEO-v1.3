@@ -1,152 +1,141 @@
-# GEO Matrix Transformation Visualizer v2.1
+GEO Matrix Transformation Visualizer v2.1
+A Python-based GUI application designed to demonstrate 2D and 3D linear transformations using Manim animations, providing step-by-step visualizations of how matrices transform vector spaces and points.
 
-A Python GUI application that demonstrates 2D-3D linear transformations through Manim animations, showing how matrices transform vector spaces and points step-by-step.
+Overview
+This project serves as an educational tool for students and educators in linear algebra, offering an interactive interface to explore matrix transformations. Built with Tkinter for the GUI and Manim for animations, it supports both 2D and 3D transformations with enhanced visualization features.
 
-## Key Features
+Key Features
 
-- 🖥️ Intuitive Tkinter interface for matrix input
-- 🧮 Supports 2x2 and 3x3 matrix transformation visualization
-- 📊 Animated transformation of basis vectors (î, ĵ, and k̂)
-- 🔄 Shows intermediate transformation steps for both basis vectors and custom points
-- 🎥 Automatic video generation and playback
+🖥️ Intuitive Tkinter Interface: Easily input 2x2 or 3x3 matrices.
+🧮 Matrix Support: Visualize transformations for various matrix types (e.g., scaling, rotation).
+📊 Basis Vector Animation: Dynamically shows transformations of basis vectors (î, ĵ, k̂).
+🔄 Step-by-Step Visualization: Displays intermediate steps for custom point and basis vector transformations.
+🎥 Automatic Video Generation: Renders and plays animation videos automatically.
 
-## Installation
 
-1. **First, run setup**:
-   ```bash
-   ./setup_environment.bat  # Windows
-   ./setup_environment.sh  # Mac/Linux
-   ```
+Installation
+Prerequisites
+Ensure the following are installed before running the application:
 
-2. **Install LaTeX**:
-   - https://miktex.org/download
-   - Click "Download" under the "Basic MiKTeX" section
-   - Select "Install missing packages on-the-fly" (IMPORTANT for Manim)
-   - Check "Run MiKTeX Console after exiting"
-   - Click "Finish"
-   - First-Time Setup: When MiKTeX Console opens, go to "Updates" tab, Click "Check for updates" and install any available updates.
+Python 3.8+
 
-3. **Then launch the GUI**:
-   ```bash
-   python main_gui.py
-   ```
+Verify with: python --version
 
-## 🛠 Prerequisites
 
-Before running, ensure you have:
+FFmpeg (for video rendering)
 
-1. **FFmpeg** (required for video rendering):
-   ```bash
-   # Windows (PowerShell as Admin):
-   winget install Gyan.FFmpeg
-   
-   # Mac:
-   brew install ffmpeg
-   
-   # Linux:
-   sudo apt install ffmpeg
-   ```
-   
-2. **Python 3.8+**
-   Verify with:
-   ```bash
-   python --version
-   ```
+Windows (PowerShell as Admin): winget install Gyan.FFmpeg
+Mac: brew install ffmpeg
+Linux: sudo apt install ffmpeg
 
-3. **LaTeX Distribution**
-   ```powershell
-   # Windows (Run PowerShell as Administrator)
-   winget install ChristianSchenk.MiKTeX
-   # Update MiKTeX packages
-   mpm --update-db
-   mpm --update
-   ```
-   
-4. **Manim Dependencies**
-   ```bash
-   pip install manim numpy tkinter
-   # Verify Manim can find MiKTeX
-   manim --version
-   ```
-   
-## Full Dependencies
 
-For complete mathematical rendering:
-- **Windows**: MiKTeX (auto-installed by setup script)
-- **Mac/Linux**: 
-  ```bash
-  # Mac
-  brew install --cask mactex
-  
-  # Linux (Debian/Ubuntu)
-  sudo apt install texlive-full
-  ```
+LaTeX Distribution
 
-### Setup
-```bash
+Windows: winget install ChristianSchenk.MiKTeX followed by mpm --update-db and mpm --update
+Mac: brew install --cask mactex
+Linux (Debian/Ubuntu): sudo apt install texlive-full
+
+
+Manim Dependencies
+
+Install with: pip install manim numpy tkinter
+Verify Manim: manim --version
+
+
+
+Setup Steps
+
+Clone the repository:
 git clone https://github.com/0xmennatullah/GEO-v2.1.git
 cd GEO-v2.1
+
+
+Run the setup script:
+./setup_environment.bat  # Windows
+./setup_environment.sh  # Mac/Linux
+
+
+Install dependencies:
 pip install manim numpy
-```
 
-## Usage
 
-1. Run the application:
-   ```bash
-   setup.bat
-   python main_gui.py
-   ```
+Launch the application:
+python main_gui.py
 
-2. In the GUI:
-   - Enter your matrices (2x2 or 3x3)
-   - Enter a point to transform (2D or 3D, matching matrix dimensions)
-   - Click "Calculate & Visualize"
-   - The animation will automatically play after rendering
 
-## What's New in v2.1
 
-- **Custom Point Transformations**: Now visualizes how your custom-defined point is transformed through each step
-- **Step-by-Step Animation**: See your point transform first by Matrix A, then by Matrix B
-- **Improved Error Handling**: Comprehensive error messages for common issues
-- **Enhanced 3D Visualization**: Better camera angles and clearer transformations
-- **Educational Approach**: Shows both point transformation and basis vectors transformation
 
-## 🔧 Troubleshooting
+Usage
 
-If you encounter:
-- **Encoding errors**: Ensure your system uses UTF-8 encoding
-- **Manim not found**: Verify with `manim --version`
-- **Blank videos**: Try `manim render --clean` first
-- **Rendering errors**: Check that your point dimensions match matrix dimensions (2D point for 2x2 matrices, 3D point for 3x3 matrices)
-- **LaTeX errors**: Make sure MiKTeX is properly installed with "Install packages on-the-fly" enabled
+Start the application:
+python main_gui.py
 
-## How It Works
 
-The application:
-1. Takes user-input matrices and a point through a Tkinter interface
-2. Computes intermediate and final transformations
-3. Generates a Manim script visualizing:
-   - Initial coordinate system and original point
-   - Transformation of the point by matrix A
-   - Subsequent transformation by matrix B
-   - Final combined transformation result
-   - Transformation of basis vectors as an educational demonstration
-4. Renders and displays the animation
+Interact with the GUI:
 
-## Code Structure
+Enter a 2x2 or 3x3 matrix.
+Input a point (2D or 3D, matching matrix dimensions).
+Click "Calculate & Visualize" to generate and play the animation.
 
-```
+
+
+
+What's New in v2.1
+
+Custom Point Transformations: Tracks user-defined points through each transformation step.
+Step-by-Step Animation: Visualizes point transformation by Matrix A, then Matrix B.
+Improved Error Handling: Provides clear error messages for invalid inputs or missing dependencies.
+Enhanced 3D Visualization: Offers better camera angles for depth perception.
+Educational Focus: Highlights both point and basis vector transformations for learning.
+
+
+Documentation
+For a detailed understanding of the project, refer to the included documentation:
+
+Project Report: GEO_Visualizer_Report.pdf contains comprehensive information, including:
+A detailed project description.
+Screenshots of the GUI and animations.
+Code snippets and setup instructions.
+
+
+
+
+Troubleshooting
+
+Encoding Errors: Ensure UTF-8 encoding is used on your system.
+Manim Not Found: Verify with manim --version.
+Blank Videos: Try manim render --clean first.
+Rendering Errors: Ensure point dimensions match matrix dimensions (2D for 2x2, 3D for 3x3).
+LaTeX Errors: Confirm MiKTeX is installed with "Install packages on-the-fly" enabled.
+
+
+How It Works
+
+Accepts user-input matrices and points via the Tkinter interface.
+Computes intermediate and final transformations.
+Generates a Manim script to visualize:
+Initial coordinate system and original point.
+Point transformation by Matrix A.
+Subsequent transformation by Matrix B.
+Final result.
+Basis vector transformations for educational insight.
+
+
+Renders and displays the animation.
+
+
+Code Structure
 GEO-v2.1/
-├── main_gui.py              # Main application
-├── matrix_visualization.py  # Generated Manim script
-├── check_environment.py     # Dependency verifier
-├── setup_environment.bat    # Windows setup
-├── setup_environment.sh     # Mac/Linux setup
-├── manim.cfg                # Render configuration
-├── .gitignore               # Ignore media/ and caches
+├── main_gui.py              # Main application logic
+├── matrix_visualization.py  # Generated Manim animation script
+├── check_environment.py     # Dependency verification script
+├── setup_environment.bat    # Windows setup script
+├── setup_environment.sh     # Mac/Linux setup script
+├── manim.cfg                # Manim rendering configuration
+├── GEO_Visualizer_Report.pdf # Project documentation and report
+├── .gitignore               # Excludes media/ and cache files
 └── README.md                # This file
-```
 
-## License
 
-MIT License - See [LICENSE](LICENSE) for details.
+License
+MIT License - See LICENSE for details.
